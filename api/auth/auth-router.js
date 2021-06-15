@@ -31,20 +31,17 @@ router.post('/register',
 //2 [POST] /api/auth/login { "username": "sue", "password": "1234" }
 
 router.post('/login', checkUsernameExists, async (req, res, next) => {
-  try {
-    const { username, password } = req.body
-    const [user] = await User.findBy({ username })
-    // does username correspont to an actual user?
-    if (user && bcrypt.compareSync(password, user.password)) {
-      req.session.user = user
-      // a cookie is set on client
-      // a session is stored for that user
-      res.json(`Welcome ${user.username}!`)
-    } else {
-      next({ status: 401, message: 'Invalid credentials' })
-    }
-  } catch (err) {
-    next(err)
+  const { password } = req.body
+  if (bcrypt.compareSync(password, req.user.password)) {
+    //make it so the cookie is set on the client
+    //make it so server stores a session with a session id
+    req.session.user = req.user
+    res.json({ message: `Welcome ${req.user.username}!`})
+  } else {
+    next({
+      status: 401,
+      message: 'Invalid credentials'
+    })
   }
 })
 
