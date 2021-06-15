@@ -39,9 +39,9 @@ router.post('/login', checkUsernameExists, async (req, res, next) => {
       req.session.user = user
       // a cookie is set on client
       // a session is stored for that user
-      res.json(`welcome back, ${user.username}!`)
+      res.json(`Welcome ${user.username}!`)
     } else {
-      next({ status: 401, message: 'invalid credentials' })
+      next({ status: 401, message: 'Invalid credentials' })
     }
   } catch (err) {
     next(err)
